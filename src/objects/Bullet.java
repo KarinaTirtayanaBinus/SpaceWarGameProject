@@ -1,4 +1,4 @@
-package bullets;
+package objects;
 
 import main.GamePanel;
 

@@ -1,8 +1,8 @@
 package main;
 
 import background.Background;
-import bullets.Bullet;
-import bullets.BulletManager;
+import objects.Bullet;
+import managers.BulletManager;
 import entity.Enemy;
 import entity.Player;
 import managers.EnemyManager;
@@ -20,8 +20,11 @@ public class GamePanel extends JPanel implements Runnable {
     private final int screenWidth = getTileSize() * getMaxScreenCol(); // 768px
     private final int screenHeight = getTileSize() * getMaxScreenRow(); // 576px
     private int fps = 60; // Game FPS
+    private int gameState;
+    private final int playState = 1;
+    private final int pauseState = 2;
     private Background background = new Background(-getScreenHeight(), this);
-    private KeyHandler keyH = new KeyHandler();
+    private KeyHandler keyH = new KeyHandler(this);
     private Thread gameThread;
     private Player player = new Player(this,keyH);
     private BulletManager bulletManager = new BulletManager(this, (int) player.getX(), (int) player.getY());
@@ -38,11 +41,16 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
         startGameThread();
+        setupGame();
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public void setupGame() {
+        gameState = 1;
     }
 
     @Override
@@ -75,10 +83,15 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
-        background.update();
-        bulletManager.update();
-        enemyManager.update();
+        switch (gameState) {
+            case 1:{
+                player.update();
+                background.update();
+                bulletManager.update();
+                enemyManager.update();
+                break;
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -88,12 +101,23 @@ public class GamePanel extends JPanel implements Runnable {
 
         background.draw(g2d);
         bulletManager.draw(g2d);
-        addBullets();
         enemyManager.draw(g2d);
-        addEnemies();
         player.draw(g2d);
 
+        if(gameState == pauseState) {
+            drawPause(g2d);
+        } else {
+            addBullets();
+            addEnemies();
+        }
+
         g2d.dispose();
+    }
+
+    public void drawPause(Graphics2D g2d) {
+        String text = "PAUSED";
+        int x, y = screenHeight/2;
+        g2d.drawString(text, getXForCenteredText(text, g2d), y);
     }
 
     public void addBullets() {
@@ -144,4 +168,21 @@ public class GamePanel extends JPanel implements Runnable {
     public int getFps() {
         return fps;
     }
+
+    public int getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(int gameState) {
+        this.gameState = gameState;
+    }
+
+    public int getPlayState() {
+        return playState;
+    }
+
+    public int getPauseState() {
+        return pauseState;
+    }
+
 }

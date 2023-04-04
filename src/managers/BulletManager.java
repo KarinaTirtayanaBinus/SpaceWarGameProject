@@ -1,6 +1,7 @@
-package bullets;
+package managers;
 
 import main.GamePanel;
+import objects.Bullet;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -39,6 +39,7 @@ public class EnemyManager {
             if(currEnemy.getY() < -gp.getTileSize()*4 || currEnemy.getY() > gp.getScreenHeight()+gp.getTileSize()*4 || currEnemy.getX() < -gp.getTileSize()*4 || currEnemy.getX() > gp.getScreenWidth()+gp.getTileSize()*4) {
                 removeEnemy(currEnemy);
             }
+
         }
     }
 
@@ -49,7 +50,7 @@ public class EnemyManager {
     }
 
     public void drawEnemy(Enemy enemy, Graphics2D g2d) {
-        g2d.drawImage(enemyImgs[0], (int) enemy.getX(), (int) enemy.getY(), null);
+        g2d.drawImage(enemyImgs[0], (int) enemy.getX(), (int) enemy.getY(), gp.getTileSize()*3/2, gp.getTileSize()*3/2, null);
     }
 
     public void addEnemy(Enemy newEnemy) {

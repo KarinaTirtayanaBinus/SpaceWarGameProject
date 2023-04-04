@@ -11,8 +11,6 @@ import java.io.IOException;
 
 public class Player extends Entity {
     KeyHandler keyH;
-    private BufferedImage up, down, left, right, def;
-    private String direction;
     private int defCounter = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -27,16 +25,16 @@ public class Player extends Entity {
         setX((gp.getScreenWidth() - gp.getTileSize() *2) / 2);
         setY(gp.getScreenHeight() - gp.getTileSize() *2);
         setSpeed(5);
-        direction = "def";
+        setDirection("def");
     }
 
     public void getPlayerImage() {
         try {
-            up = ImageIO.read(new FileInputStream("res/player/up.png"));
-            down = ImageIO.read(new FileInputStream("res/player/down.png"));
-            left = ImageIO.read(new FileInputStream("res/player/left.png"));
-            right = ImageIO.read(new FileInputStream("res/player/right.png"));
-            def = ImageIO.read(new FileInputStream("res/player/default.png"));
+            setUp(ImageIO.read(new FileInputStream("res/player/up.png")));
+            setDown(ImageIO.read(new FileInputStream("res/player/down.png")));
+            setLeft(ImageIO.read(new FileInputStream("res/player/left.png")));
+            setRight(ImageIO.read(new FileInputStream("res/player/right.png")));
+            setDef(ImageIO.read(new FileInputStream("res/player/default.png")));
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -49,22 +47,22 @@ public class Player extends Entity {
 
         if(keyH.upPressed) {
             if(getY() > 0) {
-                direction = "up";
+                setDirection("up");
                 setY(getY() - getSpeed());
             }
         } else if(keyH.downPressed) {
             if(getY() < gp.getScreenHeight() - gp.getTileSize() *2){
-                direction = "down";
+                setDirection("down");
                 setY(getY() + getSpeed());
             }
         } else if(keyH.leftPressed) {
             if(getX() > 0){
-                direction = "left";
+                setDirection("left");
                 setX(getX() - getSpeed());
             }
         } else if(keyH.rightPressed) {
             if(getX() < gp.getScreenWidth() - gp.getTileSize() *2){
-                direction = "right";
+                setDirection("right");
                 setX(getX() + getSpeed());
             }
         }
@@ -73,28 +71,28 @@ public class Player extends Entity {
     public void defPosition() {
         defCounter++;
         if(defCounter > 10){
-            direction = "def";
+            setDirection("def");
             defCounter = 0;
         }
     }
 
     public void draw(Graphics2D g2d) {
         BufferedImage image;
-        switch(direction) {
+        switch(getDirection()) {
             case "up":
-                image = up;
+                image = getUp();
                 break;
             case "down":
-                image = down;
+                image = getDown();
                 break;
             case "left":
-                image = left;
+                image = getLeft();
                 break;
             case "right":
-                image = right;
+                image = getRight();
                 break;
             default:
-                image = def;
+                image = getDef();
                 break;
         }
         g2d.drawImage(image, (int) getX(), (int) getY(), gp.getTileSize() *2, gp.getTileSize() *2, null);
