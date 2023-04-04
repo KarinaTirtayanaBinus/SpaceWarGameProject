@@ -10,11 +10,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Player extends Entity {
-    GamePanel gp;
     KeyHandler keyH;
+    private BufferedImage up, down, left, right, def;
+    private String direction;
+    private int defCounter = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
         setDefaultValues();
@@ -22,9 +24,9 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        x = (gp.getScreenWidth() - gp.getTileSize() *2) / 2;
-        y = gp.getScreenHeight() - gp.getTileSize() *2;
-        speed = 6;
+        setX((gp.getScreenWidth() - gp.getTileSize() *2) / 2);
+        setY(gp.getScreenHeight() - gp.getTileSize() *2);
+        setSpeed(5);
         direction = "def";
     }
 
@@ -46,24 +48,24 @@ public class Player extends Entity {
         }
 
         if(keyH.upPressed) {
-            if(y > 0) {
+            if(getY() > 0) {
                 direction = "up";
-                y -= speed;
+                setY(getY() - getSpeed());
             }
         } else if(keyH.downPressed) {
-            if(y < gp.getScreenHeight() - gp.getTileSize() *2){
+            if(getY() < gp.getScreenHeight() - gp.getTileSize() *2){
                 direction = "down";
-                y += speed;
+                setY(getY() + getSpeed());
             }
         } else if(keyH.leftPressed) {
-            if(x > 0){
+            if(getX() > 0){
                 direction = "left";
-                x -= speed;
+                setX(getX() - getSpeed());
             }
         } else if(keyH.rightPressed) {
-            if(x < gp.getScreenWidth() - gp.getTileSize() *2){
+            if(getX() < gp.getScreenWidth() - gp.getTileSize() *2){
                 direction = "right";
-                x += speed;
+                setX(getX() + getSpeed());
             }
         }
     }
@@ -95,6 +97,6 @@ public class Player extends Entity {
                 image = def;
                 break;
         }
-        g2d.drawImage(image, x, y, gp.getTileSize() *2, gp.getTileSize() *2, null);
+        g2d.drawImage(image, (int) getX(), (int) getY(), gp.getTileSize() *2, gp.getTileSize() *2, null);
     }
 }

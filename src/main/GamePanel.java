@@ -3,7 +3,9 @@ package main;
 import background.Background;
 import bullets.Bullet;
 import bullets.BulletManager;
+import entity.Enemy;
 import entity.Player;
+import managers.EnemyManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,9 +24,11 @@ public class GamePanel extends JPanel implements Runnable {
     private KeyHandler keyH = new KeyHandler();
     private Thread gameThread;
     private Player player = new Player(this,keyH);
-    private BulletManager bulletManager = new BulletManager(this, player.x, player.y);
+    private BulletManager bulletManager = new BulletManager(this, (int) player.getX(), (int) player.getY());
+    private EnemyManager enemyManager = new EnemyManager(this);
     private int currFPS;
-    private int bulletCounter = 0;
+    private int bulletsCounter = 0;
+    private int enemiesCounter = 0;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(getScreenWidth(), getScreenHeight()));
@@ -74,6 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
         player.update();
         background.update();
         bulletManager.update();
+        enemyManager.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -82,18 +87,28 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2d = (Graphics2D) g;
 
         background.draw(g2d);
-        player.draw(g2d);
         bulletManager.draw(g2d);
         addBullets();
+        enemyManager.draw(g2d);
+        addEnemies();
+        player.draw(g2d);
 
         g2d.dispose();
     }
 
     public void addBullets() {
-        bulletCounter++;
-        if(bulletCounter > 30) {
-            bulletManager.addBullet(new Bullet(this, player.x, player.y+tileSize/2));
-            bulletCounter = 0;
+        bulletsCounter++;
+        if(bulletsCounter > 30) {
+            bulletManager.addBullet(new Bullet(this, (int) player.getX(), (int) player.getY() +tileSize/2));
+            bulletsCounter = 0;
+        }
+    }
+
+    public void addEnemies() {
+        enemiesCounter++;
+        if(enemiesCounter > 50) {
+            enemyManager.addEnemy(new Enemy(-tileSize*2, 100, 0, this));
+            enemiesCounter = 0;
         }
     }
 

@@ -12,7 +12,7 @@ public class Bullet {
     GamePanel gp;
     private int x;
     private int y;
-    private int speed;
+    private int speed = 8;
     private BufferedImage bulletImg;
 
     public Bullet(GamePanel gp, int x, int y) {
@@ -20,11 +20,11 @@ public class Bullet {
         this.x = x;
         this.y = y;
 
-        setDefaultValues();
+        getBulletImg();
     }
 
-    public void setDefaultValues() {
-        speed = 6;
+    public void getBulletImg() {
+        speed = 8;
 
         try{
             bulletImg = ImageIO.read(new FileInputStream("res/bullets/bulletStrip3.png"));
@@ -34,7 +34,7 @@ public class Bullet {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(bulletImg.getSubimage(0, 0, 25, 30), x+ gp.getTileSize() /2, y, gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+        g2d.drawImage(bulletImg.getSubimage(0, 0, 25, 30), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
     }
 
     public void update() {

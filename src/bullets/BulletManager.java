@@ -9,7 +9,7 @@ public class BulletManager {
     GamePanel gp;
     private int x, y;
     private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-    Bullet tempBullet;
+    Bullet bullet;
 
     public BulletManager(GamePanel gp, int x, int y) {
         this.gp = gp;
@@ -21,18 +21,18 @@ public class BulletManager {
 
     public void update() {
         for(int i = 0; i < bullets.size(); i++) {
-            tempBullet = bullets.get(i);
-            if(tempBullet.getY() < -gp.getTileSize()) {
-                removeBullet(tempBullet);
+            bullet = bullets.get(i);
+            if(bullet.getY() < -gp.getTileSize()) {
+                removeBullet(bullet);
             }
-            tempBullet.update();
+            bullet.update();
         }
     }
 
     public void draw(Graphics2D g2) {
         for(int i = 0; i < bullets.size(); i++) {
-            tempBullet = bullets.get(i);
-            tempBullet.draw(g2);
+            bullet = bullets.get(i);
+            bullet.draw(g2);
         }
     }
 
