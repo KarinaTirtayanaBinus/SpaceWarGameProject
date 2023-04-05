@@ -71,7 +71,6 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
 
     @Override

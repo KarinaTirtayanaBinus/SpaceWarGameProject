@@ -13,7 +13,6 @@ public class State {
     }
 
     public boolean isIn(MouseEvent e, MenuButton mb) {
-        System.out.println(e.getX() + e.getY());
         return mb.getBounds().contains(e.getX(), e.getY());
     }
 

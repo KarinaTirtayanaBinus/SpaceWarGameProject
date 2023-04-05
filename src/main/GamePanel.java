@@ -47,6 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
+        this.addMouseListener(keyH);
+        this.addMouseMotionListener(keyH);
         this.setFocusable(true);
 
         startGameThread();
@@ -114,16 +116,24 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        if(state == GameState.MENU){
-            menuScreen.drawMenu(g2d);
-        } else {
-            background.draw(g2d);
-            bulletManager.draw(g2d);
-            enemyManager.draw(g2d);
-            player.draw(g2d);
-            if (state == GameState.PAUSE) {
+        switch (state) {
+            case MENU: {
+                menuScreen.drawMenu(g2d);
+                break;
+            }
+            case PAUSE: {
+                background.draw(g2d);
+                bulletManager.draw(g2d);
+                enemyManager.draw(g2d);
+                player.draw(g2d);
                 pauseScreen.drawPause(g2d);
-            } else {
+                break;
+            }
+            case PLAYING: {
+                background.draw(g2d);
+                bulletManager.draw(g2d);
+                enemyManager.draw(g2d);
+                player.draw(g2d);
                 addBullets();
                 addEnemies();
             }

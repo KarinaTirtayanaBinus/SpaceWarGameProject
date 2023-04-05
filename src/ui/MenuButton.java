@@ -31,6 +31,7 @@ public class MenuButton {
 
         loadButtonImgs();
         initBounds();
+        resetBools();
     }
 
     public void loadButtonImgs() {
@@ -49,7 +50,13 @@ public class MenuButton {
     }
 
     public void update() {
-        index = 0;
+        if(mousePressed) {
+            index = 2;
+        } else if(mouseOver) {
+            index = 1;
+        } else {
+            index = 0;
+        }
     }
 
     public void applyGameState() {
@@ -63,11 +70,6 @@ public class MenuButton {
 
     public void draw(Graphics2D g2d) {
         g2d.drawImage(buttons[index], x, y, BTN_WIDTH, BTN_HEIGHT, null);
-        if(mouseOver) {
-            index = 1;
-        } else if(mousePressed) {
-            index = 2;
-        }
     }
 
     public boolean isMouseOver() {
