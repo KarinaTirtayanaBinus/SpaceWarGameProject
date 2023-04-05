@@ -10,6 +10,7 @@ public class Enemy extends Entity {
     private Rectangle bounds;
     private double speed = 1;
     private int actionLockCounter = 0;
+    private int actionLockIndex = 1;
 
     public Enemy(int x, int y, int enemyType, GamePanel gp) {
         super(gp);
@@ -26,32 +27,14 @@ public class Enemy extends Entity {
     }
 
     public void setAction() {
+        actionLockCounter++;
         if(getX() < 50) {
             setX(getX()+speed);
+        } else if(getX() >= 50*actionLockIndex && getX() <= gp.getScreenWidth()-50*actionLockIndex && actionLockCounter >= 120){
+            actionLockIndex++;
+            actionLockCounter = 0;
         } else{
-            actionLockCounter++;
-            if(actionLockCounter >= 10) {
-                Random random = new Random();
-                int i = random.nextInt(100)+1;
-//                int j = random.nextInt(50)+50;
-
-                if(i <= 25) {
-                    setDirection("up");
-                    setY(getY() - speed);
-                } else if(i > 25 && i <= 50) {
-                    setDirection("down");
-                    setY(getY() + speed);
-                } else if(i > 50 && i <= 75) {
-                    setDirection("left");
-                    setX(getX() - speed);
-                } else if(i > 75) {
-                    setDirection("right");
-                    setX(getX() + speed);
-                }
-//            setY(this.getY()+speed);
-                actionLockCounter = 0;
-
-            }
+            setX(getX()+speed);
         }
 
     }

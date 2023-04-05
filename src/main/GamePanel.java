@@ -1,11 +1,13 @@
 package main;
 
-import background.Background;
+import ui.Background;
 import objects.Bullet;
 import managers.BulletManager;
 import entity.Enemy;
 import entity.Player;
 import managers.EnemyManager;
+import state.MainMenu;
+import state.Pause;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,13 +21,20 @@ public class GamePanel extends JPanel implements Runnable {
     private final int maxScreenRow = 12;
     private final int screenWidth = getTileSize() * getMaxScreenCol(); // 768px
     private final int screenHeight = getTileSize() * getMaxScreenRow(); // 576px
-    private int fps = 60; // Game FPS
-    private int gameState;
-    private final int playState = 1;
-    private final int pauseState = 2;
+    private int fps = 60;
+
+    // GAME STATE
+    private GameState state;
+
+    // GAME SCREEN
+    private MainMenu menuScreen = new MainMenu(this);
+    private Pause pauseScreen = new Pause(this);
     private Background background = new Background(-getScreenHeight(), this);
+
     private KeyHandler keyH = new KeyHandler(this);
     private Thread gameThread;
+
+    // GAME OBJECTS
     private Player player = new Player(this,keyH);
     private BulletManager bulletManager = new BulletManager(this, (int) player.getX(), (int) player.getY());
     private EnemyManager enemyManager = new EnemyManager(this);
@@ -50,7 +59,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
-        gameState = 1;
+        state = GameState.MENU;
     }
 
     @Override
@@ -83,13 +92,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        switch (gameState) {
-            case 1:{
+        switch (state) {
+            case MENU:{
+                menuScreen.update();
+            }
+            case PLAYING:{
                 player.update();
                 background.update();
                 bulletManager.update();
                 enemyManager.update();
                 break;
+            }
+            case QUIT:{
+                System.exit(0);
             }
         }
     }
@@ -99,26 +114,25 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        background.draw(g2d);
-        bulletManager.draw(g2d);
-        enemyManager.draw(g2d);
-        player.draw(g2d);
-
-        if(gameState == pauseState) {
-            drawPause(g2d);
+        if(state == GameState.MENU){
+            menuScreen.drawMenu(g2d);
         } else {
-            addBullets();
-            addEnemies();
+            background.draw(g2d);
+            bulletManager.draw(g2d);
+            enemyManager.draw(g2d);
+            player.draw(g2d);
+            if (state == GameState.PAUSE) {
+                pauseScreen.drawPause(g2d);
+            } else {
+                addBullets();
+                addEnemies();
+            }
         }
 
         g2d.dispose();
     }
 
-    public void drawPause(Graphics2D g2d) {
-        String text = "PAUSED";
-        int x, y = screenHeight/2;
-        g2d.drawString(text, getXForCenteredText(text, g2d), y);
-    }
+
 
     public void addBullets() {
         bulletsCounter++;
@@ -169,20 +183,15 @@ public class GamePanel extends JPanel implements Runnable {
         return fps;
     }
 
-    public int getGameState() {
-        return gameState;
+    public GameState getState() {
+        return state;
     }
 
-    public void setGameState(int gameState) {
-        this.gameState = gameState;
+    public void setState(GameState state) {
+        this.state = state;
     }
 
-    public int getPlayState() {
-        return playState;
+    public MainMenu getMenuScreen() {
+        return menuScreen;
     }
-
-    public int getPauseState() {
-        return pauseState;
-    }
-
 }

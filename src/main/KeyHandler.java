@@ -1,15 +1,15 @@
 package main;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
-public class KeyHandler implements KeyListener {
+public class KeyHandler implements KeyListener, MouseListener, MouseMotionListener {
     GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
+
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
@@ -31,10 +31,10 @@ public class KeyHandler implements KeyListener {
                 break;
             }
             case KeyEvent.VK_ESCAPE: {
-                if(gp.getGameState() == gp.getPlayState()) {
-                    gp.setGameState(gp.getPauseState());
-                } else if(gp.getGameState() == gp.getPauseState()) {
-                    gp.setGameState(gp.getPlayState());
+                if(gp.getState() == GameState.PLAYING) {
+                    gp.setState(GameState.PAUSE);
+                } else if(gp.getState() == GameState.PAUSE) {
+                    gp.setState(GameState.PLAYING);
                 }
                 break;
             }
@@ -67,5 +67,60 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
 
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        switch (gp.getState()) {
+            case MENU: {
+                gp.getMenuScreen().mousePressed(e);
+                break;
+            }
+            case PLAYING: {
+
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        switch (gp.getState()) {
+            case MENU: {
+                gp.getMenuScreen().mouseReleased(e);
+            }
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        switch (gp.getState()) {
+            case MENU: {
+                gp.getMenuScreen().mouseMoved(e);
+                break;
+            }
+            case PLAYING: {
+                break;
+            }
+        }
     }
 }

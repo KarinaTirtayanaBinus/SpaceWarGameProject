@@ -35,7 +35,7 @@ public class EnemyManager {
     public void update() {
         for(int i = 0; i < enemies.size(); i++) {
             Enemy currEnemy = enemies.get(i);
-            currEnemy.move();
+            currEnemy.setAction();
             if(currEnemy.getY() < -gp.getTileSize()*4 || currEnemy.getY() > gp.getScreenHeight()+gp.getTileSize()*4 || currEnemy.getX() < -gp.getTileSize()*4 || currEnemy.getX() > gp.getScreenWidth()+gp.getTileSize()*4) {
                 removeEnemy(currEnemy);
             }
