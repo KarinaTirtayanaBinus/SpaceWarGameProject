@@ -2,6 +2,7 @@ package state;
 
 import main.GamePanel;
 import main.GameState;
+import main.Sound;
 import ui.MenuButton;
 
 import javax.imageio.ImageIO;
@@ -40,7 +41,7 @@ public class MainMenu extends State implements MouseListener, MouseMotionListene
     public void drawMenu(Graphics2D g2d) {
         g2d.drawImage(backgroundMenu, 0, yBg, null);
 
-        g2d.setFont(new Font("Forte", Font.BOLD, 72));
+        g2d.setFont(new Font("Forte", Font.BOLD, 84));
         g2d.setColor(Color.gray);
         String gameTitle = "SPACE WAR";
         g2d.drawString(gameTitle, gp.getXForCenteredText(gameTitle, g2d)+2, gp.getScreenHeight()/2 - gp.getTileSize()*3+2);

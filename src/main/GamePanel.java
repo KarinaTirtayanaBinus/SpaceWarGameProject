@@ -31,13 +31,16 @@ public class GamePanel extends JPanel implements Runnable {
     private Pause pauseScreen = new Pause(this);
     private Background background = new Background(-getScreenHeight(), this);
 
+    // SYSTEM
     private KeyHandler keyH = new KeyHandler(this);
     private Thread gameThread;
+    private Sound sound = new Sound();
 
     // GAME OBJECTS
     private Player player = new Player(this,keyH);
     private BulletManager bulletManager = new BulletManager(this, (int) player.getX(), (int) player.getY());
     private EnemyManager enemyManager = new EnemyManager(this);
+
     private int currFPS;
     private int bulletsCounter = 0;
     private int enemiesCounter = 0;
@@ -62,6 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         state = GameState.MENU;
+        sound.playSong(Sound.MENU);
     }
 
     @Override
@@ -142,12 +146,11 @@ public class GamePanel extends JPanel implements Runnable {
         g2d.dispose();
     }
 
-
-
     public void addBullets() {
         bulletsCounter++;
         if(bulletsCounter > 30) {
             bulletManager.addBullet(new Bullet(this, (int) player.getX(), (int) player.getY() +tileSize/2));
+            sound.playEffect(Sound.FIRE);
             bulletsCounter = 0;
         }
     }
@@ -203,5 +206,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public MainMenu getMenuScreen() {
         return menuScreen;
+    }
+
+    public Sound getSound() {
+        return sound;
     }
 }

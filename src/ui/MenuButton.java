@@ -2,6 +2,7 @@ package ui;
 
 import main.GamePanel;
 import main.GameState;
+import main.Sound;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,6 +12,7 @@ import java.io.IOException;
 
 public class MenuButton {
     private GamePanel gp;
+    private Sound sound = new Sound();
     private int x, y, index, row;
     private GameState state;
     private BufferedImage[] buttons;
@@ -18,6 +20,7 @@ public class MenuButton {
     private Rectangle bounds;
     public static final int BTN_WIDTH = 300;
     public static final int BTN_HEIGHT = 70;
+    private int hoverTrigger = 0;
     private String[][] imgsName = {{"playButton.jpg", "playButtonHover.jpg", "playButtonClicked.jpg"},
             {"optionButton.jpg", "optionButtonHover.jpg", "optionButtonClicked.jpg"},
             {"quitButton.jpg", "quitButtonHover.jpg", "quitButtonClicked.jpg"}};
@@ -51,11 +54,17 @@ public class MenuButton {
 
     public void update() {
         if(mousePressed) {
+            sound.playEffect(Sound.BUTTON_CLICK);
             index = 2;
         } else if(mouseOver) {
+            if(hoverTrigger == 0) {
+                sound.playEffect(Sound.BUTTON_HOVER);
+                hoverTrigger = 1;
+            }
             index = 1;
         } else {
             index = 0;
+            hoverTrigger = 0;
         }
     }
 
@@ -94,5 +103,9 @@ public class MenuButton {
 
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
+    }
+
+    public GameState getState() {
+        return state;
     }
 }
