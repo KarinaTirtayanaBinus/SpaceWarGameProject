@@ -3,7 +3,6 @@ package entity;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Enemy extends Entity {
     private int enemyType;

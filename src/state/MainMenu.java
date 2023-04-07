@@ -1,7 +1,6 @@
 package state;
 
 import main.GamePanel;
-import main.GameState;
 import main.Sound;
 import ui.MenuButton;
 
@@ -29,7 +28,7 @@ public class MainMenu extends State implements MouseListener, MouseMotionListene
 
     public void loadMenuImgs() {
         try{
-            backgroundMenu = ImageIO.read(new FileInputStream("res/maps/mainMenu.jpg"));
+            backgroundMenu = ImageIO.read(new FileInputStream("res/background/mainMenu.jpg"));
             buttons[0] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2-gp.getTileSize(), 0, GameState.PLAYING, gp);
             buttons[1] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2+gp.getTileSize(), 1, GameState.SETTING, gp);
             buttons[2] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2+gp.getTileSize()*3, 2, GameState.QUIT, gp);
@@ -93,6 +92,9 @@ public class MainMenu extends State implements MouseListener, MouseMotionListene
             if(isIn(e, mb)) {
                 if(mb.isMousePressed()){
                     mb.applyGameState();
+                }
+                if(mb.getState() == GameState.PLAYING) {
+                    gp.getSound().playSong(Sound.PLAYING);
                 }
                 break;
             }

@@ -1,13 +1,21 @@
 package main;
 
+import state.GameState;
+import state.Playing;
+
 import java.awt.event.*;
 
 public class KeyHandler implements KeyListener, MouseListener, MouseMotionListener {
-    GamePanel gp;
+    private GamePanel gp;
+    private Playing playing;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
+    }
+
+    public KeyHandler(Playing playing) {
+        this.playing = playing;
     }
 
     @Override
@@ -31,10 +39,10 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case KeyEvent.VK_ESCAPE: {
-                if(gp.getState() == GameState.PLAYING) {
-                    gp.setState(GameState.PAUSE);
-                } else if(gp.getState() == GameState.PAUSE) {
-                    gp.setState(GameState.PLAYING);
+                if(!gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().setPaused(true);
+                } else {
+                    gp.getPlayingScreen().setPaused(false);
                 }
                 break;
             }

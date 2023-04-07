@@ -31,8 +31,14 @@ Assets reference:
     https://opengameart.org/sites/default/files/spr_bullet_strip03.png
     https://opengameart.org/sites/default/files/spr_bullet_strip04.png
 
-- Sounds
-  https://www.youtube.com/shorts/FsLkXXOyeRI
-https://www.youtube.com/watch?v=qWCLauk9oNo
-https://www.youtube.com/watch?v=ILaQFzeuamU
-https://www.youtube.com/watch?v=h8y0JMVwdmM
+- Background Sounds
+    https://www.youtube.com/shorts/FsLkXXOyeRI
+    https://www.youtube.com/watch?v=Jl3wrpyCI10
+
+- Sound Effects
+    https://www.youtube.com/watch?v=qWCLauk9oNo
+    https://www.youtube.com/watch?v=ILaQFzeuamU
+    https://www.youtube.com/watch?v=h8y0JMVwdmM
+
+- Buttons
+  https://www.shutterstock.com/image-vector/pixel-art-bright-buttons-vector-260nw-1080190031.jpg

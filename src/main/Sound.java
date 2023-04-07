@@ -28,7 +28,7 @@ public class Sound {
     }
 
     private void loadSongs() {
-        String[] names = {"MenuSound"};
+        String[] names = {"MenuSound", "GameSound"};
         songs = new Clip[names.length];
 
         for(int i = 0; i < songs.length; i++) {

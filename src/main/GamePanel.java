@@ -1,6 +1,8 @@
 package main;
 
-import ui.Background;
+import state.GameState;
+import state.Playing;
+import ui.GameBackground;
 import objects.Bullet;
 import managers.BulletManager;
 import entity.Enemy;
@@ -28,18 +30,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     // GAME SCREEN
     private MainMenu menuScreen = new MainMenu(this);
-    private Pause pauseScreen = new Pause(this);
-    private Background background = new Background(-getScreenHeight(), this);
+    private Playing playingScreen;
 
     // SYSTEM
     private KeyHandler keyH = new KeyHandler(this);
     private Thread gameThread;
     private Sound sound = new Sound();
-
-    // GAME OBJECTS
-    private Player player = new Player(this,keyH);
-    private BulletManager bulletManager = new BulletManager(this, (int) player.getX(), (int) player.getY());
-    private EnemyManager enemyManager = new EnemyManager(this);
 
     private int currFPS;
     private int bulletsCounter = 0;
@@ -47,7 +43,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(getScreenWidth(), getScreenHeight()));
-        this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.addMouseListener(keyH);
@@ -65,6 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         state = GameState.MENU;
+        playingScreen = new Playing(this, keyH, state);
         sound.playSong(Sound.MENU);
     }
 
@@ -99,17 +95,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         switch (state) {
-            case MENU:{
+            case MENU: {
                 menuScreen.update();
-            }
-            case PLAYING:{
-                player.update();
-                background.update();
-                bulletManager.update();
-                enemyManager.update();
                 break;
             }
-            case QUIT:{
+            case PLAYING: {
+                playingScreen.update();
+                break;
+            }
+            case QUIT: {
                 System.exit(0);
             }
         }
@@ -125,42 +119,13 @@ public class GamePanel extends JPanel implements Runnable {
                 menuScreen.drawMenu(g2d);
                 break;
             }
-            case PAUSE: {
-                background.draw(g2d);
-                bulletManager.draw(g2d);
-                enemyManager.draw(g2d);
-                player.draw(g2d);
-                pauseScreen.drawPause(g2d);
-                break;
-            }
             case PLAYING: {
-                background.draw(g2d);
-                bulletManager.draw(g2d);
-                enemyManager.draw(g2d);
-                player.draw(g2d);
-                addBullets();
-                addEnemies();
+                playingScreen.draw(g2d);
+                break;
             }
         }
 
         g2d.dispose();
-    }
-
-    public void addBullets() {
-        bulletsCounter++;
-        if(bulletsCounter > 30) {
-            bulletManager.addBullet(new Bullet(this, (int) player.getX(), (int) player.getY() +tileSize/2));
-            sound.playEffect(Sound.FIRE);
-            bulletsCounter = 0;
-        }
-    }
-
-    public void addEnemies() {
-        enemiesCounter++;
-        if(enemiesCounter > 50) {
-            enemyManager.addEnemy(new Enemy(-tileSize*2, 100, 0, this));
-            enemiesCounter = 0;
-        }
     }
 
     public int getXForCenteredText(String text, Graphics g2) {
@@ -210,5 +175,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public Sound getSound() {
         return sound;
+    }
+
+    public Playing getPlayingScreen() {
+        return playingScreen;
     }
 }

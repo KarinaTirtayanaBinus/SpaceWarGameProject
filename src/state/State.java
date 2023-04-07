@@ -1,7 +1,6 @@
 package state;
 
 import main.GamePanel;
-import main.GameState;
 import main.Sound;
 import ui.MenuButton;
 
