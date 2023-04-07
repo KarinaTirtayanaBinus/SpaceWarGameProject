@@ -7,16 +7,12 @@ import java.awt.event.*;
 
 public class KeyHandler implements KeyListener, MouseListener, MouseMotionListener {
     private GamePanel gp;
-    private Playing playing;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
 
     public KeyHandler(GamePanel gp) {
         this.gp = gp;
     }
 
-    public KeyHandler(Playing playing) {
-        this.playing = playing;
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -89,7 +85,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case PLAYING: {
-
+                if(gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().getPauseScreen().mousePressed(e);
+                }
             }
         }
     }
@@ -99,6 +97,11 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
         switch (gp.getState()) {
             case MENU: {
                 gp.getMenuScreen().mouseReleased(e);
+            }
+            case PLAYING: {
+                if(gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().getPauseScreen().mouseReleased(e);
+                }
             }
         }
     }
@@ -126,6 +129,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case PLAYING: {
+                if(gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().getPauseScreen().mouseMoved(e);
+                }
                 break;
             }
         }

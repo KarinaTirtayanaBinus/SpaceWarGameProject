@@ -44,6 +44,8 @@ public class Playing {
             gameBackground.update();
             bulletManager.update();
             enemyManager.update();
+        } else {
+            pauseScreen.update();
         }
     }
 
@@ -84,5 +86,9 @@ public class Playing {
 
     public void setPaused(boolean paused) {
         isPaused = paused;
+    }
+
+    public Pause getPauseScreen() {
+        return pauseScreen;
     }
 }
