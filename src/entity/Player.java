@@ -76,6 +76,11 @@ public class Player extends Entity {
         }
     }
 
+    public void resetPosition() {
+        setX((gp.getScreenWidth() - gp.getTileSize() *2) / 2);
+        setY(gp.getScreenHeight() - gp.getTileSize() *2);
+    }
+
     public void draw(Graphics2D g2d) {
         BufferedImage image;
         switch(getDirection()) {

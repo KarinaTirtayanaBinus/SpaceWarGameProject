@@ -44,4 +44,8 @@ public class BulletManager {
     public void removeBullet(Bullet block) {
         bullets.remove(block);
     }
+
+    public void resetAllBullets() {
+        bullets.removeAll(bullets);
+    }
 }

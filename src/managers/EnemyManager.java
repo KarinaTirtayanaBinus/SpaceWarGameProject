@@ -60,4 +60,8 @@ public class EnemyManager {
     public void removeEnemy(Enemy delEnemy) {
         enemies.remove(delEnemy);
     }
+
+    public void resetAllEnemies() {
+        enemies.removeAll(enemies);
+    }
 }

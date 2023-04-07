@@ -35,10 +35,14 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case KeyEvent.VK_ESCAPE: {
-                if(!gp.getPlayingScreen().isPaused()) {
-                    gp.getPlayingScreen().setPaused(true);
-                } else {
-                    gp.getPlayingScreen().setPaused(false);
+                switch (gp.getState()) {
+                    case PLAYING: {
+                        gp.getPlayingScreen().setPaused(!gp.getPlayingScreen().isPaused());
+                        break;
+                    }
+                    case SETTING: {
+                        gp.getOptionScreen().keyPressed(e);
+                    }
                 }
                 break;
             }
@@ -89,6 +93,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                     gp.getPlayingScreen().getPauseScreen().mousePressed(e);
                 }
             }
+            case SETTING: {
+                gp.getOptionScreen().mousePressed(e);
+            }
         }
     }
 
@@ -102,6 +109,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 if(gp.getPlayingScreen().isPaused()) {
                     gp.getPlayingScreen().getPauseScreen().mouseReleased(e);
                 }
+            }
+            case SETTING: {
+                gp.getOptionScreen().mouseReleased(e);
             }
         }
     }
@@ -118,7 +128,16 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        switch (gp.getState()) {
+            case PLAYING: {
+//                if(gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().getPauseScreen().mouseDragged(e);
+//                }
+            }
+            case SETTING: {
+                gp.getOptionScreen().mouseDragged(e);
+            }
+        }
     }
 
     @Override
@@ -129,10 +148,13 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case PLAYING: {
-                if(gp.getPlayingScreen().isPaused()) {
+//                if(gp.getPlayingScreen().isPaused()) {
                     gp.getPlayingScreen().getPauseScreen().mouseMoved(e);
-                }
+//                }
                 break;
+            }
+            case SETTING: {
+                gp.getOptionScreen().mouseMoved(e);
             }
         }
     }

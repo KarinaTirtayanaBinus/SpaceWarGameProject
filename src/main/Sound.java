@@ -18,7 +18,7 @@ public class Sound {
 
     private Clip[] songs, effects;
     private int currSongId;
-    private float volume = 0.9f;
+    private float volume = 0.8f;
     private boolean songMute, effectMute;
     private Random rand = new Random();
 
@@ -108,7 +108,7 @@ public class Sound {
             booleanControl.setValue(effectMute);
         }
 
-        if(!effectMute)  {
+        if(!effectMute) {
             playEffect(FIRE);
         }
     }

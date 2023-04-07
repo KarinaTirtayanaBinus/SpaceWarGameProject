@@ -2,43 +2,35 @@ package state;
 
 import main.GamePanel;
 import main.Sound;
+import ui.Background;
 import ui.MenuButton;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
 
-public class MainMenu extends State implements MouseListener, MouseMotionListener {
-    BufferedImage backgroundMenu;
+public class MainMenu extends State implements StateMethods {
     private MenuButton[] buttons = new MenuButton[3];
+    private Background background;
     private int yBg;
     private int speedBg = 1;
 
     public MainMenu(GamePanel gp) {
         super(gp);
         yBg = -gp.getScreenHeight()/2;
+        background = new Background(-gp.getScreenHeight(), gp, Background.MENU_BG);
 
         loadMenuImgs();
     }
 
     public void loadMenuImgs() {
-        try{
-            backgroundMenu = ImageIO.read(new FileInputStream("res/background/mainMenu.jpg"));
-            buttons[0] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2-gp.getTileSize(), 0, GameState.PLAYING, gp);
-            buttons[1] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2+gp.getTileSize(), 1, GameState.SETTING, gp);
-            buttons[2] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2+gp.getTileSize()*3, 2, GameState.QUIT, gp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        buttons[0] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2-gp.getTileSize(), 0, GameState.PLAYING, gp);
+        buttons[1] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2+gp.getTileSize(), 1, GameState.SETTING, gp);
+        buttons[2] = new MenuButton(gp.getScreenWidth()/2 - MenuButton.BTN_WIDTH/2, gp.getScreenHeight()/2+gp.getTileSize()*3, 2, GameState.QUIT, gp);
     }
 
-    public void drawMenu(Graphics2D g2d) {
-        g2d.drawImage(backgroundMenu, 0, yBg, null);
+    public void draw(Graphics2D g2d) {
+        background.draw(g2d);
 
         g2d.setFont(new Font("Forte", Font.BOLD, 84));
         g2d.setColor(Color.gray);
@@ -60,11 +52,7 @@ public class MainMenu extends State implements MouseListener, MouseMotionListene
     }
 
     public void update() {
-        yBg += speedBg;
-
-        if(yBg >= 0) {
-            yBg = -gp.getScreenHeight()/2;
-        }
+        background.update();
 
         for(MenuButton mb: buttons) {
             mb.update();
@@ -103,21 +91,6 @@ public class MainMenu extends State implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    @Override
     public void mouseMoved(MouseEvent e) {
         for(MenuButton mb: buttons) {
             mb.setMouseOver(false);
@@ -128,5 +101,19 @@ public class MainMenu extends State implements MouseListener, MouseMotionListene
                 break;
             }
         }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public Background getBackground() {
+        return background;
     }
 }

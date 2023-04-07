@@ -1,6 +1,6 @@
 package state;
 
 public enum GameState {
-    MENU, SETTING, PLAYING, PAUSE, GAME_OVER, QUIT;
+    MENU, SETTING, PLAYING, GAME_OVER, QUIT;
 
 }

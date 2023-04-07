@@ -1,15 +1,10 @@
 package main;
 
 import state.GameState;
+import state.OptionMenu;
 import state.Playing;
-import ui.GameBackground;
-import objects.Bullet;
-import managers.BulletManager;
-import entity.Enemy;
-import entity.Player;
-import managers.EnemyManager;
+import ui.AudioOptions;
 import state.MainMenu;
-import state.Pause;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,13 +24,15 @@ public class GamePanel extends JPanel implements Runnable {
     private GameState state;
 
     // GAME SCREEN
-    private MainMenu menuScreen = new MainMenu(this);
+    private MainMenu menuScreen;
+    private OptionMenu optionScreen;
     private Playing playingScreen;
 
     // SYSTEM
     private KeyHandler keyH = new KeyHandler(this);
     private Thread gameThread;
-    private Sound sound = new Sound();
+    private AudioOptions audioOptions;
+    private Sound sound;
 
     private int currFPS;
     private int bulletsCounter = 0;
@@ -49,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseMotionListener(keyH);
         this.setFocusable(true);
 
-        startGameThread();
         setupGame();
+        startGameThread();
     }
 
     public void startGameThread() {
@@ -60,7 +57,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         state = GameState.MENU;
-        playingScreen = new Playing(this, keyH, state);
+
+        audioOptions = new AudioOptions(this);
+        sound = new Sound();
+
+        menuScreen = new MainMenu(this);
+        optionScreen = new OptionMenu(this);
+        playingScreen = new Playing(this, keyH);
+
         sound.playSong(Sound.MENU);
     }
 
@@ -103,8 +107,13 @@ public class GamePanel extends JPanel implements Runnable {
                 playingScreen.update();
                 break;
             }
+            case SETTING: {
+                optionScreen.update();
+                break;
+            }
             case QUIT: {
                 System.exit(0);
+                break;
             }
         }
     }
@@ -116,7 +125,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         switch (state) {
             case MENU: {
-                menuScreen.drawMenu(g2d);
+                menuScreen.draw(g2d);
+                break;
+            }
+            case SETTING: {
+                optionScreen.draw(g2d);
                 break;
             }
             case PLAYING: {
@@ -179,5 +192,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public Playing getPlayingScreen() {
         return playingScreen;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
+
+    public OptionMenu getOptionScreen() {
+        return optionScreen;
     }
 }

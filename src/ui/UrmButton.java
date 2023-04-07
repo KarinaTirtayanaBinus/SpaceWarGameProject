@@ -8,30 +8,28 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class SoundButton extends PauseButton {
-    private BufferedImage[][] soundImgs;
-    private Sound sound;
+public class UrmButton extends PauseButton {
+    private BufferedImage[] urmImgs;
+    private int rowIndex, index;
     private boolean mouseOver, mousePressed;
-    private boolean muted;
-    private int rowIndex, colIndex;
+    private Sound sound;
     private int hoverTrigger = 0, clickTrigger = 0;
 
-    public SoundButton(int x, int y, int width, int height) {
+    public UrmButton(int x, int y, int width, int height, int rowIndex) {
         super(x, y, width, height);
+        this.rowIndex = rowIndex;
         sound = new Sound();
 
-        loadSongImgs();
+        loadImgs();
     }
 
-    private void loadSongImgs() {
-        try{
-            BufferedImage temp = ImageIO.read(new FileInputStream("res/buttons/soundBoxes.png"));
-            soundImgs = new BufferedImage[2][3];
+    public void loadImgs() {
+        try {
+            BufferedImage temp = ImageIO.read(new FileInputStream("res/buttons/urmBoxes.png"));
+            urmImgs = new BufferedImage[3];
 
-            for(int i = 0; i < soundImgs.length; i++) {
-                for(int j = 0; j < soundImgs[i].length; j++) {
-                    soundImgs[i][j] = temp.getSubimage(j*SOUND_SIZE, i*SOUND_SIZE, SOUND_SIZE, SOUND_SIZE);
-                }
+            for(int i = 0; i < urmImgs.length; i++) {
+                urmImgs[i] = temp.getSubimage(i*URM_SIZE, rowIndex*URM_SIZE, URM_SIZE, URM_SIZE);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,34 +37,27 @@ public class SoundButton extends PauseButton {
     }
 
     public void update() {
-        if(muted) {
-            rowIndex = 1;
-        } else {
-            rowIndex = 0;
-        }
-
         if(mousePressed) {
             if(clickTrigger == 0) {
                 sound.playEffect(2);
                 clickTrigger = 1;
             }
-            colIndex = 2;
+            index = 2;
         } else if(mouseOver) {
             if(hoverTrigger == 0) {
                 sound.playEffect(1);
                 hoverTrigger = 1;
             }
-            colIndex = 1;
-        }
-        else {
-            colIndex = 0;
+            index = 1;
+        } else {
+            index = 0;
             hoverTrigger = 0;
             clickTrigger = 0;
         }
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(soundImgs[rowIndex][colIndex], x, y, width, height, null);
+        g2d.drawImage(urmImgs[index], x, y, URM_SIZE, URM_SIZE, null);
     }
 
     public void resetBools() {
@@ -88,13 +79,5 @@ public class SoundButton extends PauseButton {
 
     public void setMousePressed(boolean mousePressed) {
         this.mousePressed = mousePressed;
-    }
-
-    public boolean isMuted() {
-        return muted;
-    }
-
-    public void setMuted(boolean muted) {
-        this.muted = muted;
     }
 }
