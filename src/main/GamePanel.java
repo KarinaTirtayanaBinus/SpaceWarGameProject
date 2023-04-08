@@ -3,6 +3,8 @@ package main;
 import state.GameState;
 import state.OptionMenu;
 import state.Playing;
+import system.KeyHandler;
+import system.Sound;
 import ui.AudioOptions;
 import state.MainMenu;
 

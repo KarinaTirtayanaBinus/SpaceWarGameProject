@@ -2,90 +2,47 @@ package entity;
 
 import main.GamePanel;
 
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public abstract class Entity {
-    GamePanel gp;
-    private double x;
-    private double y;
-    private int speed;
-    private int health;
-    private BufferedImage up, down, left, right, def;
-    private String direction;
+    protected GamePanel gp;
+    protected static final int DEFAULT = 0;
+    protected static final int LEFT = 1;
+    protected static final int UP = 2;
+    protected static final int RIGHT = 3;
+    protected static final int DOWN = 4;
+    protected float x, y;
+    protected float width, height;
+    protected Rectangle2D.Float hitBox;
+    protected int state;
+    protected int maxHealth;
+    protected int currentHealth;
+    protected Rectangle2D.Float attackBox;
+    protected float speed;
+    protected int moveDir;
 
-    public Entity(GamePanel gp) {
+    public Entity(GamePanel gp, float x, float y, int width, int height) {
         this.gp = gp;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
-    public double getX() {
+    protected void initHitBox(float x, float y, int width, int height) {
+        hitBox = new Rectangle2D.Float(x, y, width, height);
+    }
+
+    public Rectangle2D.Float getHitBox() {
+        return hitBox;
+    }
+
+    public float getX() {
         return x;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
+    public float getY() {
         return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public BufferedImage getUp() {
-        return up;
-    }
-
-    public void setUp(BufferedImage up) {
-        this.up = up;
-    }
-
-    public BufferedImage getDown() {
-        return down;
-    }
-
-    public void setDown(BufferedImage down) {
-        this.down = down;
-    }
-
-    public BufferedImage getLeft() {
-        return left;
-    }
-
-    public void setLeft(BufferedImage left) {
-        this.left = left;
-    }
-
-    public BufferedImage getRight() {
-        return right;
-    }
-
-    public void setRight(BufferedImage right) {
-        this.right = right;
-    }
-
-    public BufferedImage getDef() {
-        return def;
-    }
-
-    public void setDef(BufferedImage def) {
-        this.def = def;
-    }
-
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
     }
 }

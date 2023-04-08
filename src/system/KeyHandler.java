@@ -1,5 +1,6 @@
-package main;
+package system;
 
+import main.GamePanel;
 import state.GameState;
 import state.Playing;
 
@@ -130,9 +131,7 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
     public void mouseDragged(MouseEvent e) {
         switch (gp.getState()) {
             case PLAYING: {
-//                if(gp.getPlayingScreen().isPaused()) {
-                    gp.getPlayingScreen().getPauseScreen().mouseDragged(e);
-//                }
+                gp.getPlayingScreen().getPauseScreen().mouseDragged(e);
             }
             case SETTING: {
                 gp.getOptionScreen().mouseDragged(e);
@@ -148,9 +147,7 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case PLAYING: {
-//                if(gp.getPlayingScreen().isPaused()) {
-                    gp.getPlayingScreen().getPauseScreen().mouseMoved(e);
-//                }
+                gp.getPlayingScreen().getPauseScreen().mouseMoved(e);
                 break;
             }
             case SETTING: {

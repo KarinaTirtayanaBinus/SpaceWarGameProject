@@ -42,3 +42,7 @@ Assets reference:
 
 - Buttons
   https://www.shutterstock.com/image-vector/pixel-art-bright-buttons-vector-260nw-1080190031.jpg
+
+- Enemies
+  https://thumbs.dreamstime.com/z/animated-sprites-bat-monster-character-creating-fantasy-rpg-adventure-video-games-animated-bat-monster-character-sprites-116939714.jpg
+- https://thumbs.dreamstime.com/b/animated-bat-monster-character-sprites-animated-sprites-bat-monster-character-creating-fantasy-rpg-adventure-video-games-116939778.jpg

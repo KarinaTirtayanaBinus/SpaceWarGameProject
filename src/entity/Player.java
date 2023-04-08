@@ -1,7 +1,7 @@
 package entity;
 
 import main.GamePanel;
-import main.KeyHandler;
+import system.KeyHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,60 +10,57 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Player extends Entity {
-    KeyHandler keyH;
+    private GamePanel gp;
+    private KeyHandler keyH;
     private int defCounter = 0;
+    private BufferedImage[] playerImgs;
+    private String[] imgsName = {"default", "left", "up", "right", "down"};
 
-    public Player(GamePanel gp, KeyHandler keyH) {
-        super(gp);
+    public Player(GamePanel gp, float x, float y, int width, int height, KeyHandler keyH) {
+        super(gp, x, y, width, height);
         this.keyH = keyH;
+        this.gp = gp;
+        speed = 5;
 
-        setDefaultValues();
         getPlayerImage();
     }
 
-    public void setDefaultValues() {
-        setX((gp.getScreenWidth() - gp.getTileSize() *2) / 2);
-        setY(gp.getScreenHeight() - gp.getTileSize() *2);
-        setSpeed(5);
-        setDirection("def");
-    }
-
-    public void getPlayerImage() {
+    private void getPlayerImage() {
+        playerImgs = new BufferedImage[5];
         try {
-            setUp(ImageIO.read(new FileInputStream("res/player/up.png")));
-            setDown(ImageIO.read(new FileInputStream("res/player/down.png")));
-            setLeft(ImageIO.read(new FileInputStream("res/player/left.png")));
-            setRight(ImageIO.read(new FileInputStream("res/player/right.png")));
-            setDef(ImageIO.read(new FileInputStream("res/player/default.png")));
+            for(int i = 0; i < imgsName.length; i++) {
+                playerImgs[i] = ImageIO.read(new FileInputStream("res/player/" + imgsName[i] + ".png"));
+            }
         } catch(IOException e) {
             e.printStackTrace();
         }
     }
 
     public void update() {
+
         if(!keyH.upPressed && !keyH.downPressed && !keyH.leftPressed && !keyH.rightPressed){
             defPosition();
         }
 
         if(keyH.upPressed) {
-            if(getY() > 0) {
-                setDirection("up");
-                setY(getY() - getSpeed());
+            if(y > 0) {
+                moveDir = UP;
+                y -= speed;
             }
         } else if(keyH.downPressed) {
-            if(getY() < gp.getScreenHeight() - gp.getTileSize() *2){
-                setDirection("down");
-                setY(getY() + getSpeed());
+            if(y < gp.getScreenHeight() - gp.getTileSize() *2){
+                moveDir = DOWN;
+                y += speed;
             }
         } else if(keyH.leftPressed) {
-            if(getX() > 0){
-                setDirection("left");
-                setX(getX() - getSpeed());
+            if(x > 0){
+                moveDir = LEFT;
+                x -= speed;
             }
         } else if(keyH.rightPressed) {
-            if(getX() < gp.getScreenWidth() - gp.getTileSize() *2){
-                setDirection("right");
-                setX(getX() + getSpeed());
+            if(x < gp.getScreenWidth() - gp.getTileSize() *2){
+                moveDir = RIGHT;
+                x += speed;
             }
         }
     }
@@ -71,35 +68,17 @@ public class Player extends Entity {
     public void defPosition() {
         defCounter++;
         if(defCounter > 10){
-            setDirection("def");
+            moveDir = DEFAULT;
             defCounter = 0;
         }
     }
 
     public void resetPosition() {
-        setX((gp.getScreenWidth() - gp.getTileSize() *2) / 2);
-        setY(gp.getScreenHeight() - gp.getTileSize() *2);
+        x = (gp.getScreenWidth() - gp.getTileSize() *2) / 2;
+        y = (gp.getScreenHeight() - gp.getTileSize() *2);
     }
 
     public void draw(Graphics2D g2d) {
-        BufferedImage image;
-        switch(getDirection()) {
-            case "up":
-                image = getUp();
-                break;
-            case "down":
-                image = getDown();
-                break;
-            case "left":
-                image = getLeft();
-                break;
-            case "right":
-                image = getRight();
-                break;
-            default:
-                image = getDef();
-                break;
-        }
-        g2d.drawImage(image, (int) getX(), (int) getY(), gp.getTileSize() *2, gp.getTileSize() *2, null);
+        g2d.drawImage(playerImgs[moveDir], (int) x, (int) y, (int) width, (int) height, null);
     }
 }

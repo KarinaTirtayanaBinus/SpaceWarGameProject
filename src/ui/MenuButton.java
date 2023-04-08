@@ -2,7 +2,7 @@ package ui;
 
 import main.GamePanel;
 import state.GameState;
-import main.Sound;
+import system.Sound;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

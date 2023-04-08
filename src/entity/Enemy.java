@@ -2,55 +2,88 @@ package entity;
 
 import main.GamePanel;
 
-import java.awt.*;
+public abstract class Enemy extends Entity {
+    // CONSTANTS
+    public static final int ONE_EYE = 0;
+    public static final int BAT = 1;
+    public static final int BOSS = 2;
+    public static final int IDLE = 0;
+    public static final int RUNNING = 1;
+    public static final int ATTACK = 2;
+    public static final int DEAD = 3;
+    public static final int ENEMY_WIDTH = 100;
+    public static final int ENEMY_HEIGHT = 65;
+    public static final int BOSS_DEFAULT_WIDTH = 55;
+    public static final int BOSS_DEFAULT_HEIGHT = 89;
+    public static final int BOSS_WIDTH = BOSS_DEFAULT_WIDTH*2;
+    public static final int BOSS_HEIGHT = BOSS_DEFAULT_HEIGHT*2;
 
-public class Enemy extends Entity {
-    private int enemyType;
-    private Rectangle bounds;
-    private double speed = 1;
-    private int actionLockCounter = 0;
-    private int actionLockIndex = 1;
+    // ATTRIBUTES
+    protected int enemyType;
+    protected int enemyState;
+    protected boolean firstUpdate = true;
+    protected boolean outsideScreen = false;
+    protected boolean active = true;
+    protected boolean attackChecked;
+    protected int attackBoxOffsetX;
+    private int aniTick, aniIndex, aniSpeed = 25;
+    private float gravity = 0.04f;
 
-    public Enemy(int x, int y, int enemyType, GamePanel gp) {
-        super(gp);
-
-        setX(x);
-        setY(y);
+    public Enemy(GamePanel gp, float x, float y, int width, int height, int enemyType) {
+        super(gp, x, y, width, height);
         this.enemyType = enemyType;
-        bounds = new Rectangle(x, y, gp.getTileSize(), gp.getTileSize());
+        speed = 1;
+        moveDir = RIGHT;
+
+        initHitBox(x, y, width, height);
     }
 
-    public void move() {
-        setX(this.getX()+speed);
-        setY(this.getY()+speed);
-    }
-
-    public void setAction() {
-        actionLockCounter++;
-        if(getX() < 50) {
-            setX(getX()+speed);
-        } else if(getX() >= 50*actionLockIndex && getX() <= gp.getScreenWidth()-50*actionLockIndex && actionLockCounter >= 120){
-            actionLockIndex++;
-            actionLockCounter = 0;
-        } else{
-            setX(getX()+speed);
+    private void updateAnimationTick() {
+        aniTick++;
+        if(aniTick >= aniSpeed) {
+            aniTick = 0;
+            aniIndex++;
+            if(aniIndex >= 4) {
+                aniIndex = 0;
+            }
         }
-
     }
 
-    public int getEnemyType() {
-        return enemyType;
+    public void update() {
+        updateMove();
+        updateAnimationTick();
     }
 
-    public void setEnemyType(int enemyType) {
-        this.enemyType = enemyType;
+    private void updateMove() {
+        switch (enemyState) {
+            case IDLE: {
+                enemyState = RUNNING;
+            }
+            case RUNNING: {
+                if(moveDir == LEFT) {
+                    hitBox.x -= speed;
+                } else {
+                    hitBox.x += speed;
+                }
+                changeMoveDir();
+                break;
+            }
+        }
     }
 
-    public Rectangle getBounds() {
-        return bounds;
+    private void changeMoveDir() {
+        if(moveDir == RIGHT && hitBox.x > x+gp.getTileSize()) {
+            moveDir = LEFT;
+        } else if(moveDir == LEFT && hitBox.x < x-gp.getTileSize()) {
+            moveDir = RIGHT;
+        }
     }
 
-    public void setBounds(Rectangle bounds) {
-        this.bounds = bounds;
+    public int getEnemyState() {
+        return enemyState;
+    }
+
+    public int getAniIndex() {
+        return aniIndex;
     }
 }

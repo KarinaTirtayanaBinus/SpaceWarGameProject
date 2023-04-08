@@ -1,4 +1,4 @@
-package main;
+package system;
 
 import javax.sound.sampled.*;
 import java.net.URL;

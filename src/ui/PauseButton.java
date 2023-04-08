@@ -1,7 +1,5 @@
 package ui;
 
-import main.Sound;
-
 import java.awt.*;
 
 public class PauseButton {

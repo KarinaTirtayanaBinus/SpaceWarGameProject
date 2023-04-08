@@ -1,6 +1,6 @@
 package ui;
 
-import main.Sound;
+import system.Sound;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

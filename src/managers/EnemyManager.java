@@ -1,7 +1,10 @@
 package managers;
 
-import entity.Enemy;
+import entity.Bat;
+import entity.Boss;
+import entity.OneEye;
 import main.GamePanel;
+import state.Playing;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,57 +14,120 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class EnemyManager {
-    GamePanel gp;
-    private BufferedImage[] enemyImgs;
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-    public EnemyManager(GamePanel gp) {
-        this.gp = gp;
-        enemyImgs = new BufferedImage[4];
+    private GamePanel gp;
+    private Playing playing;
+    private BufferedImage[] oneEyeArr;
+    private BufferedImage[] batArr;
+    private BufferedImage[] bossArr;
+    private ArrayList<OneEye> oneEyes = new ArrayList<>();
+    private ArrayList<Bat> bats = new ArrayList<>();
+    private ArrayList<Boss> bosses = new ArrayList<>();
 
-        getEnemyImgs();
+    public EnemyManager(GamePanel gp, Playing playing) {
+        this.playing = playing;
+        this.gp = gp;
+
+        loadEnemyImgs();
     }
 
-    public void getEnemyImgs() {
+    private void loadEnemyImgs() {
+        oneEyeArr = new BufferedImage[5];
+        batArr = new BufferedImage[5];
+        bossArr = new BufferedImage[4];
+
         try{
-            enemyImgs[0] = ImageIO.read(new FileInputStream("res/enemy/enemy1.png"));
-            enemyImgs[1] = ImageIO.read(new FileInputStream("res/enemy/enemy2.png"));
-            enemyImgs[2] = ImageIO.read(new FileInputStream("res/enemy/enemy3.png"));
-            enemyImgs[3] = ImageIO.read(new FileInputStream("res/enemy/enemy4.png"));
+            BufferedImage temp = ImageIO.read(new FileInputStream("res/enemy/oneEyeSprite.png"));
+            for(int i = 0; i < oneEyeArr.length; i++) {
+                oneEyeArr[i] = temp.getSubimage(10+i*OneEye.ENEMY_WIDTH, 0, OneEye.ENEMY_WIDTH, OneEye.ENEMY_HEIGHT);
+            }
+
+            temp = ImageIO.read(new FileInputStream("res/enemy/batSprite.png"));
+            for(int i = 0; i < batArr.length; i++) {
+                batArr[i] = temp.getSubimage(i*Bat.ENEMY_WIDTH, 0, Bat.ENEMY_WIDTH, Bat.ENEMY_HEIGHT);
+            }
+
+            temp = ImageIO.read(new FileInputStream("res/enemy/bossSprite.png"));
+            for(int i = 0; i < bossArr.length; i++) {
+                bossArr[i] = temp.getSubimage(i* Boss.BOSS_DEFAULT_WIDTH, 0, Boss.BOSS_DEFAULT_WIDTH, Boss.BOSS_DEFAULT_HEIGHT);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public void update() {
-        for(int i = 0; i < enemies.size(); i++) {
-            Enemy currEnemy = enemies.get(i);
-            currEnemy.setAction();
-            if(currEnemy.getY() < -gp.getTileSize()*4 || currEnemy.getY() > gp.getScreenHeight()+gp.getTileSize()*4 || currEnemy.getX() < -gp.getTileSize()*4 || currEnemy.getX() > gp.getScreenWidth()+gp.getTileSize()*4) {
-                removeEnemy(currEnemy);
-            }
+        for(OneEye oneEye: oneEyes) {
+            oneEye.update();
+        }
 
+        for(Bat bat: bats) {
+            bat.update();
+        }
+
+        for(Boss boss: bosses) {
+            boss.update();
         }
     }
 
     public void draw(Graphics2D g2d) {
-        for(int i = 0; i < enemies.size(); i++) {
-            drawEnemy(enemies.get(i), g2d);
+        drawOneEye(g2d);
+        drawBat(g2d);
+        drawBoss(g2d);
+    }
+
+    public void drawOneEye(Graphics2D g2d) {
+        for(OneEye oneEye: oneEyes) {
+            g2d.drawImage(oneEyeArr[oneEye.getAniIndex()], (int) oneEye.getHitBox().x, (int) oneEye.getHitBox().y, OneEye.ENEMY_WIDTH, OneEye.ENEMY_HEIGHT, null);
         }
     }
 
-    public void drawEnemy(Enemy enemy, Graphics2D g2d) {
-        g2d.drawImage(enemyImgs[0], (int) enemy.getX(), (int) enemy.getY(), gp.getTileSize()*3/2, gp.getTileSize()*3/2, null);
+    public void drawBat(Graphics2D g2d) {
+        for(Bat bat: bats) {
+            g2d.drawImage(batArr[bat.getAniIndex()], (int) bat.getHitBox().x, (int) bat.getHitBox().y, Bat.ENEMY_WIDTH*3/2, Bat.ENEMY_HEIGHT*3/2, null);
+        }
     }
 
-    public void addEnemy(Enemy newEnemy) {
-        enemies.add(newEnemy);
+    public void drawBoss(Graphics2D g2d) {
+        for(Boss boss: bosses) {
+            g2d.drawImage(bossArr[boss.getAniIndex()], (int) boss.getHitBox().x, (int) boss.getHitBox().y, Boss.BOSS_WIDTH, Boss.BOSS_HEIGHT, null);
+        }
     }
 
-    public void removeEnemy(Enemy delEnemy) {
-        enemies.remove(delEnemy);
+    public void addOneEye(float x, float y) {
+        oneEyes.add(new OneEye(gp, x, y));
+    }
+
+    public void removeOneEye(OneEye oneEye) {
+        oneEyes.remove(oneEye);
+    }
+
+    public void addBat(float x, float y) {
+        bats.add(new Bat(gp, x, y));
+    }
+
+    public void removeBat(Bat bat) {
+        bats.remove(bat);
+    }
+
+    public void addBoss(float x, float y) {
+        bosses.add(new Boss(gp, x, y));
+    }
+
+    public void removeBoss(Boss boss) {
+        bosses.remove(boss);
     }
 
     public void resetAllEnemies() {
-        enemies.removeAll(enemies);
+        oneEyes.removeAll(oneEyes);
+        bats.removeAll(bats);
+    }
+
+    public boolean isEnemyClear() {
+        if(oneEyes.size() == 0 && bats.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
