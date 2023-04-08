@@ -1,5 +1,6 @@
 package managers;
 
+import entity.Entity;
 import main.GamePanel;
 import objects.Bullet;
 
@@ -7,23 +8,19 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BulletManager {
-    GamePanel gp;
-    private int x, y;
+    private GamePanel gp;
     private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-    Bullet bullet;
+    private Bullet bullet;
 
-    public BulletManager(GamePanel gp, int x, int y) {
+    public BulletManager(GamePanel gp) {
         this.gp = gp;
-        this.x = x;
-        this.y = y;
 
-        addBullet(new Bullet(gp, x, y));
     }
 
     public void update() {
         for(int i = 0; i < bullets.size(); i++) {
             bullet = bullets.get(i);
-            if(bullet.getY() < -gp.getTileSize()) {
+            if(bullet.getY() < -gp.getTileSize() || bullet.getY() > gp.getScreenHeight()+gp.getTileSize()) {
                 removeBullet(bullet);
             }
             bullet.update();

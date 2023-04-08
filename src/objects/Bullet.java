@@ -9,36 +9,62 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Bullet {
-    GamePanel gp;
+    public static final int PLAYER = 0;
+    public static final int ENEMY = 1;
+    public static final int BOSS = 2;
+    private GamePanel gp;
     private int x;
     private int y;
-    private int speed = 8;
-    private BufferedImage bulletImg;
+    private int playerBulletSpeed = 10;
+    private int enemyBulletSpeed = 6;
+    private BufferedImage bulletImg, bossBulletImg;
+    private int user;
 
-    public Bullet(GamePanel gp, int x, int y) {
+    public Bullet(GamePanel gp, int x, int y, int user) {
         this.gp = gp;
         this.x = x;
         this.y = y;
+        this.user = user;
 
         getBulletImg();
     }
 
     public void getBulletImg() {
-        speed = 8;
-
         try{
             bulletImg = ImageIO.read(new FileInputStream("res/bullets/bulletStrip3.png"));
+            bossBulletImg = ImageIO.read(new FileInputStream("res/bullets/bulletStrip1.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(bulletImg.getSubimage(0, 0, 25, 30), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+        switch (user) {
+            case PLAYER: {
+                g2d.drawImage(bulletImg.getSubimage(0, 0, 25, 30), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+                break;
+            }
+            case ENEMY: {
+                g2d.drawImage(bulletImg.getSubimage(0, 25, 25, 30), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+                break;
+            }
+            case BOSS: {
+                g2d.drawImage(bossBulletImg.getSubimage(40, 0, 34, 39), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+            }
+        }
     }
 
     public void update() {
-        y -= speed;
+        switch (user) {
+            case PLAYER: {
+                y -= playerBulletSpeed;
+                break;
+            }
+            case ENEMY, BOSS: {
+                y += enemyBulletSpeed;
+                break;
+            }
+        }
     }
 
     public int getY() {

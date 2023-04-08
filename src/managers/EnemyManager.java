@@ -130,4 +130,16 @@ public class EnemyManager {
             return false;
         }
     }
+
+    public ArrayList<OneEye> getOneEyes() {
+        return oneEyes;
+    }
+
+    public ArrayList<Bat> getBats() {
+        return bats;
+    }
+
+    public ArrayList<Boss> getBosses() {
+        return bosses;
+    }
 }

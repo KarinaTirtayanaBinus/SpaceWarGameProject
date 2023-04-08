@@ -1,8 +1,6 @@
 package state;
 
-import entity.Enemy;
-import entity.OneEye;
-import entity.Player;
+import entity.*;
 import main.GamePanel;
 import system.KeyHandler;
 import system.Sound;
@@ -22,11 +20,13 @@ public class Playing{
     private Sound sound;
     private Background background;
     private Pause pauseScreen;
-    private int bulletsCounter = 0;
+    private int bulletsCounterPlayer = 0;
+    private int bulletsCounterEnemy = 0;
     private boolean isPaused = false, added = false;
     private int colX = 1, rowY = 1;
     private int enemyType = 0;
     private boolean reset = false;
+    private int bulletIndex = 1;
 
     public Playing(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -37,7 +37,7 @@ public class Playing{
 
     private void initClasses() {
         buildPlayer();
-        bulletManager = new BulletManager(gp, (int) player.getX(), (int) player.getY());
+        bulletManager = new BulletManager(gp);
         enemyManager = new EnemyManager(gp, this);
         sound = new Sound();
         background = new Background(-gp.getScreenHeight(), gp, Background.PLAYING_BG);
@@ -101,16 +101,56 @@ public class Playing{
         if(isPaused) {
             pauseScreen.draw(g2d);
         } else {
-            addBullets();
+            addBulletsPlayer();
+            addBulletsEnemy();
         }
     }
 
-    public void addBullets() {
-        bulletsCounter++;
-        if(bulletsCounter > 30) {
-            bulletManager.addBullet(new Bullet(gp, (int) player.getX(), (int) player.getY() +gp.getTileSize()/2));
+    public void addBulletsPlayer() {
+        bulletsCounterPlayer++;
+        if(bulletsCounterPlayer > 30) {
+            bulletManager.addBullet(new Bullet(gp, (int) player.getX(), (int) player.getY() +gp.getTileSize()/2, Bullet.PLAYER));
             sound.playEffect(Sound.FIRE);
-            bulletsCounter = 0;
+            bulletsCounterPlayer = 0;
+        }
+    }
+
+    public void addBulletsEnemy() {
+        bulletsCounterEnemy++;
+        if(bulletsCounterEnemy > 50) {
+            int i = 1;
+            if(bulletIndex == -1) {
+                bulletIndex = 1;
+            }
+            switch (enemyType) {
+                case Enemy.ONE_EYE: {
+                    for(OneEye oneEye: enemyManager.getOneEyes()) {
+                        if(i%2 == bulletIndex) {
+                            bulletManager.addBullet(new Bullet(gp, (int) oneEye.getHitBox().x, (int) oneEye.getHitBox().y+gp.getTileSize(), Bullet.ENEMY));
+                        }
+                        i++;
+                    }
+                    break;
+                }
+                case Enemy.BAT: {
+                    for(Bat bat: enemyManager.getBats()) {
+                        if(i%2 == bulletIndex) {
+                            bulletManager.addBullet(new Bullet(gp, (int) bat.getHitBox().x+gp.getTileSize()*2/3, (int) bat.getHitBox().y+gp.getTileSize()*3/2, Bullet.ENEMY));
+                        }
+                        i++;
+                    }
+                    break;
+                }
+                case Enemy.BOSS: {
+                    for(Boss boss: enemyManager.getBosses()) {
+                        bulletManager.addBullet(new Bullet(gp, (int) boss.getHitBox().x, (int) boss.getHitBox().y+gp.getTileSize(), Bullet.BOSS));
+                    }
+                    break;
+                }
+            }
+
+            bulletIndex--;
+            bulletsCounterEnemy = 0;
         }
     }
 
