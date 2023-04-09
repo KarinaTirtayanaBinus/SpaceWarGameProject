@@ -15,7 +15,8 @@ public class Playing{
     private GamePanel gp;
     private KeyHandler keyH;
     private Player player;
-    private BulletManager bulletManager;
+    private BulletManager playerBullet;
+    private BulletManager enemyBullet;
     private EnemyManager enemyManager;
     private Sound sound;
     private Background background;
@@ -27,6 +28,8 @@ public class Playing{
     private int enemyType = 0;
     private boolean reset = false;
     private int bulletIndex = 1;
+    private boolean playerIsHit = false;
+    private boolean enemyIsHit = false;
 
     public Playing(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -37,7 +40,8 @@ public class Playing{
 
     private void initClasses() {
         buildPlayer();
-        bulletManager = new BulletManager(gp);
+        playerBullet = new BulletManager(gp, this);
+        enemyBullet = new BulletManager(gp, this);
         enemyManager = new EnemyManager(gp, this);
         sound = new Sound();
         background = new Background(-gp.getScreenHeight(), gp, Background.PLAYING_BG);
@@ -56,7 +60,57 @@ public class Playing{
         if(!isPaused) {
             player.update();
             background.update();
-            bulletManager.update();
+            switch (enemyType) {
+                case Enemy.ONE_EYE: {
+                    for(int i = 0; i < enemyManager.getOneEyes().size(); i++) {
+                        OneEye oneEye = enemyManager.getOneEyes().get(i);
+                        playerBullet.update(oneEye.getHitBox().x, oneEye.getHitBox().y, Bullet.ENEMY);
+                        if(enemyIsHit) {
+                            oneEye.setCurrHealth(oneEye.getCurrHealth()-100);
+                            enemyIsHit = false;
+                        }
+                        if(oneEye.getCurrHealth() == 0) {
+                            enemyManager.removeOneEye(oneEye);
+                        }
+                    }
+                    break;
+                }
+                case Enemy.BAT: {
+                    for(int i = 0; i < enemyManager.getBats().size(); i++) {
+                        Bat bat = enemyManager.getBats().get(i);
+                        playerBullet.update(bat.getHitBox().x, bat.getHitBox().y, Bullet.ENEMY);
+                        if(enemyIsHit) {
+                            bat.setCurrHealth(bat.getCurrHealth()-100);
+                            enemyIsHit = false;
+                        }
+                        if(bat.getCurrHealth() == 0) {
+                            enemyManager.removeBat(bat);
+                        }
+                    }
+                    playerBullet.getBullet().setPlayerBulletSpeed(2);
+                    break;
+                }
+                case Enemy.BOSS: {
+                    for(int i = 0; i < enemyManager.getBosses().size(); i++) {
+                        Boss boss = enemyManager.getBosses().get(i);
+                        playerBullet.update(boss.getHitBox().x, boss.getHitBox().y, Bullet.ENEMY);
+                        if(enemyIsHit) {
+                            boss.setCurrHealth(boss.getCurrHealth()-5);
+                            enemyIsHit = false;
+                        }
+                        if(boss.getCurrHealth() == 0) {
+                            enemyManager.removeBoss(boss);
+                        }
+                    }
+                    playerBullet.getBullet().setPlayerBulletSpeed(10);
+                    break;
+                }
+            }
+            enemyBullet.update(player.getX(), player.getY(), Bullet.PLAYER);
+            if(playerIsHit) {
+                player.setCurrHealth(player.getCurrHealth()-5);
+                playerIsHit = false;
+            }
             enemyManager.update();
         } else {
             pauseScreen.update();
@@ -70,7 +124,6 @@ public class Playing{
             if(enemyType == 3) {
                 gp.setState(GameState.GAME_OVER);
             } else {
-                addEnemies(enemyType);
                 added = false;
             }
         } else if(reset) {
@@ -80,7 +133,8 @@ public class Playing{
 
     public void reset() {
         enemyManager.resetAllEnemies();
-        bulletManager.resetAllBullets();
+        playerBullet.resetAllBullets();
+        enemyBullet.resetAllBullets();
         player.resetPosition();
         gp.getSound().stopSong();
 
@@ -93,10 +147,11 @@ public class Playing{
 
     public void draw(Graphics2D g2d) {
         background.draw(g2d);
-        bulletManager.draw(g2d);
+        playerBullet.draw(g2d);
+        enemyBullet.draw(g2d);
         enemyManager.draw(g2d);
         player.draw(g2d);
-        addEnemies(enemyType);;
+        addEnemies(enemyType);
 
         if(isPaused) {
             pauseScreen.draw(g2d);
@@ -109,7 +164,7 @@ public class Playing{
     public void addBulletsPlayer() {
         bulletsCounterPlayer++;
         if(bulletsCounterPlayer > 30) {
-            bulletManager.addBullet(new Bullet(gp, (int) player.getX(), (int) player.getY() +gp.getTileSize()/2, Bullet.PLAYER));
+            playerBullet.addBullet(new Bullet(gp, (int) player.getX(), (int) player.getY() +gp.getTileSize()/2, Bullet.PLAYER));
             sound.playEffect(Sound.FIRE);
             bulletsCounterPlayer = 0;
         }
@@ -124,18 +179,21 @@ public class Playing{
             }
             switch (enemyType) {
                 case Enemy.ONE_EYE: {
-                    for(OneEye oneEye: enemyManager.getOneEyes()) {
-                        if(i%2 == bulletIndex) {
-                            bulletManager.addBullet(new Bullet(gp, (int) oneEye.getHitBox().x, (int) oneEye.getHitBox().y+gp.getTileSize(), Bullet.ENEMY));
+                    for(int j = 0; j < enemyManager.getOneEyes().size(); j++) {
+                        OneEye oneEye = enemyManager.getOneEyes().get(j);
+                        if(i%2 == bulletIndex && oneEye != null) {
+                            enemyBullet.addBullet(new Bullet(gp, (int) oneEye.getHitBox().x, (int) oneEye.getHitBox().y+gp.getTileSize(), Bullet.ENEMY));
                         }
                         i++;
                     }
+//                    for(OneEye oneEye: enemyManager.getOneEyes()) {
+//                    }
                     break;
                 }
                 case Enemy.BAT: {
                     for(Bat bat: enemyManager.getBats()) {
                         if(i%2 == bulletIndex) {
-                            bulletManager.addBullet(new Bullet(gp, (int) bat.getHitBox().x+gp.getTileSize()*2/3, (int) bat.getHitBox().y+gp.getTileSize()*3/2, Bullet.ENEMY));
+                            enemyBullet.addBullet(new Bullet(gp, (int) bat.getHitBox().x+gp.getTileSize()*2/3, (int) bat.getHitBox().y+gp.getTileSize()*3/2, Bullet.ENEMY));
                         }
                         i++;
                     }
@@ -143,7 +201,7 @@ public class Playing{
                 }
                 case Enemy.BOSS: {
                     for(Boss boss: enemyManager.getBosses()) {
-                        bulletManager.addBullet(new Bullet(gp, (int) boss.getHitBox().x, (int) boss.getHitBox().y+gp.getTileSize(), Bullet.BOSS));
+                        enemyBullet.addBullet(new Bullet(gp, (int) boss.getHitBox().x, (int) boss.getHitBox().y+gp.getTileSize(), Bullet.BOSS));
                     }
                     break;
                 }
@@ -208,5 +266,13 @@ public class Playing{
 
     public Pause getPauseScreen() {
         return pauseScreen;
+    }
+
+    public void setPlayerIsHit(boolean playerIsHit) {
+        this.playerIsHit = playerIsHit;
+    }
+
+    public void setEnemyIsHit(boolean enemyIsHit) {
+        this.enemyIsHit = enemyIsHit;
     }
 }

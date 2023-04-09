@@ -22,6 +22,7 @@ public class Player extends Entity {
         this.gp = gp;
         speed = 5;
 
+        initHitBox(x, y, width, height);
         getPlayerImage();
     }
 

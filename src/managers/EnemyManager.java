@@ -124,7 +124,7 @@ public class EnemyManager {
     }
 
     public boolean isEnemyClear() {
-        if(oneEyes.size() == 0 && bats.size() == 0) {
+        if(oneEyes.size() == 0 && bats.size() == 0 && bosses.size() == 0) {
             return true;
         } else {
             return false;

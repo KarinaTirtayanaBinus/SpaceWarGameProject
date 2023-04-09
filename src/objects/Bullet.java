@@ -15,7 +15,7 @@ public class Bullet {
     private GamePanel gp;
     private int x;
     private int y;
-    private int playerBulletSpeed = 10;
+    private int playerBulletSpeed = 1;
     private int enemyBulletSpeed = 6;
     private BufferedImage bulletImg, bossBulletImg;
     private int user;
@@ -69,5 +69,17 @@ public class Bullet {
 
     public int getY() {
         return y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setPlayerBulletSpeed(int playerBulletSpeed) {
+        this.playerBulletSpeed = playerBulletSpeed;
+    }
+
+    public int getPlayerBulletSpeed() {
+        return playerBulletSpeed;
     }
 }

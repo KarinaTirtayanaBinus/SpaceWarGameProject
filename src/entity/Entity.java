@@ -3,7 +3,6 @@ package entity;
 import main.GamePanel;
 
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 
 public abstract class Entity {
     protected GamePanel gp;
@@ -16,9 +15,7 @@ public abstract class Entity {
     protected float width, height;
     protected Rectangle2D.Float hitBox;
     protected int state;
-    protected int maxHealth;
-    protected int currentHealth;
-    protected Rectangle2D.Float attackBox;
+    protected int currHealth;
     protected float speed;
     protected int moveDir;
 
@@ -28,6 +25,7 @@ public abstract class Entity {
         this.y = y;
         this.width = width;
         this.height = height;
+        currHealth = 100;
     }
 
     protected void initHitBox(float x, float y, int width, int height) {
@@ -44,5 +42,13 @@ public abstract class Entity {
 
     public float getY() {
         return y;
+    }
+
+    public int getCurrHealth() {
+        return currHealth;
+    }
+
+    public void setCurrHealth(int currHealth) {
+        this.currHealth = currHealth;
     }
 }
