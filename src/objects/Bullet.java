@@ -49,7 +49,7 @@ public class Bullet {
                 break;
             }
             case BOSS: {
-                g2d.drawImage(bossBulletImg.getSubimage(40, 0, 34, 39), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+                g2d.drawImage(bossBulletImg.getSubimage(46, 0, 26, 39), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
             }
         }
     }

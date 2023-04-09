@@ -90,7 +90,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case PLAYING: {
-                if(gp.getPlayingScreen().isPaused()) {
+                if(gp.getPlayingScreen().isGameOver()) {
+                    gp.getPlayingScreen().getGameOverScreen().mousePressed(e);
+                } else if(gp.getPlayingScreen().isPaused()) {
                     gp.getPlayingScreen().getPauseScreen().mousePressed(e);
                 }
             }
@@ -107,7 +109,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 gp.getMenuScreen().mouseReleased(e);
             }
             case PLAYING: {
-                if(gp.getPlayingScreen().isPaused()) {
+                if(gp.getPlayingScreen().isGameOver()) {
+                    gp.getPlayingScreen().getGameOverScreen().mouseReleased(e);
+                } else if(gp.getPlayingScreen().isPaused()) {
                     gp.getPlayingScreen().getPauseScreen().mouseReleased(e);
                 }
             }
@@ -131,7 +135,9 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
     public void mouseDragged(MouseEvent e) {
         switch (gp.getState()) {
             case PLAYING: {
-                gp.getPlayingScreen().getPauseScreen().mouseDragged(e);
+                if(gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().getPauseScreen().mouseDragged(e);
+                }
             }
             case SETTING: {
                 gp.getOptionScreen().mouseDragged(e);
@@ -147,7 +153,11 @@ public class KeyHandler implements KeyListener, MouseListener, MouseMotionListen
                 break;
             }
             case PLAYING: {
-                gp.getPlayingScreen().getPauseScreen().mouseMoved(e);
+                if(gp.getPlayingScreen().isGameOver()) {
+                    gp.getPlayingScreen().getGameOverScreen().mouseMoved(e);
+                } else if(gp.getPlayingScreen().isPaused()) {
+                    gp.getPlayingScreen().getPauseScreen().mouseMoved(e);
+                }
                 break;
             }
             case SETTING: {

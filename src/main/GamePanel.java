@@ -1,12 +1,9 @@
 package main;
 
-import state.GameState;
-import state.OptionMenu;
-import state.Playing;
+import state.*;
 import system.KeyHandler;
 import system.Sound;
 import ui.AudioOptions;
-import state.MainMenu;
 
 import javax.swing.*;
 import java.awt.*;
