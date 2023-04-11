@@ -2,7 +2,6 @@ package state;
 
 import main.GamePanel;
 import system.Sound;
-import ui.AudioOptions;
 import ui.Background;
 import ui.PauseButton;
 import ui.UrmButton;

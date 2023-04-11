@@ -1,6 +1,5 @@
 package managers;
 
-import entity.Entity;
 import main.GamePanel;
 import objects.Bullet;
 import state.Playing;
@@ -19,7 +18,7 @@ public class BulletManager {
         this.playing = playing;
     }
 
-    public void update(float xTarget, float yTarget, int targetType) {
+    public void update(float xTarget, float yTarget, int targetType, int j) {
         for(int i = 0; i < bullets.size(); i++) {
             bullet = bullets.get(i);
             if(bullet.getY() < -gp.getTileSize() || bullet.getY() > gp.getScreenHeight()+gp.getTileSize()) {
@@ -32,7 +31,9 @@ public class BulletManager {
                 removeBullet(bullet);
                 playing.setEnemyIsHit(true);
             }
-            bullet.update();
+            if(j == 0) {
+                bullet.update();
+            }
         }
     }
 

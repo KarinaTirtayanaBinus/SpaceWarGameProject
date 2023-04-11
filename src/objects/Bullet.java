@@ -15,7 +15,7 @@ public class Bullet {
     private GamePanel gp;
     private int x;
     private int y;
-    private int playerBulletSpeed = 1;
+    private int playerBulletSpeed = 10;
     private int enemyBulletSpeed = 6;
     private BufferedImage bulletImg, bossBulletImg;
     private int user;
@@ -49,7 +49,8 @@ public class Bullet {
                 break;
             }
             case BOSS: {
-                g2d.drawImage(bossBulletImg.getSubimage(46, 0, 26, 39), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+                g2d.drawImage(bossBulletImg.getSubimage(0, 45, 39, 28), x+ gp.getTileSize() /2, y-gp.getTileSize(), gp.getTileSize(), gp.getTileSize()+gp.getTileSize()/2, null);
+                break;
             }
         }
     }
