@@ -69,15 +69,12 @@ public class Playing{
                         OneEye oneEye = enemyManager.getOneEyes().get(i);
                         playerBullet.update(oneEye.getHitBox().x, oneEye.getHitBox().y, Bullet.ENEMY, j);
                         if(enemyIsHit) {
-                            oneEye.setCurrHealth(oneEye.getCurrHealth()-100);
+                            oneEye.setCurrHealth(oneEye.getCurrHealth()-20);
                             enemyIsHit = false;
                         }
                         if(oneEye.getCurrHealth() <= 0) {
                             enemyManager.removeOneEye(oneEye);
                         }
-//                        if(j >= 10) {
-//                            j = 0;
-//                        }
                         j++;
                     }
                     break;
@@ -87,7 +84,7 @@ public class Playing{
                         Bat bat = enemyManager.getBats().get(i);
                         playerBullet.update(bat.getHitBox().x, bat.getHitBox().y, Bullet.ENEMY, j);
                         if(enemyIsHit) {
-                            bat.setCurrHealth(bat.getCurrHealth()-100);
+                            bat.setCurrHealth(bat.getCurrHealth()-10);
                             enemyIsHit = false;
                         }
                         if(bat.getCurrHealth() <= 0) {
@@ -102,7 +99,7 @@ public class Playing{
                         Boss boss = enemyManager.getBosses().get(i);
                         playerBullet.update(boss.getHitBox().x, boss.getHitBox().y, Bullet.ENEMY, 0);
                         if(enemyIsHit) {
-                            boss.setCurrHealth(boss.getCurrHealth()-50);
+                            boss.setCurrHealth(boss.getCurrHealth()-5);
                             enemyIsHit = false;
                         }
                         if(boss.getCurrHealth() <= 0) {
