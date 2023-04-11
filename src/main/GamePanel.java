@@ -1,9 +1,9 @@
 package main;
 
-import background.Background;
-import bullets.Bullet;
-import bullets.BulletManager;
-import entity.Player;
+import state.*;
+import system.KeyHandler;
+import system.Sound;
+import ui.AudioOptions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,28 +17,54 @@ public class GamePanel extends JPanel implements Runnable {
     private final int maxScreenRow = 12;
     private final int screenWidth = getTileSize() * getMaxScreenCol(); // 768px
     private final int screenHeight = getTileSize() * getMaxScreenRow(); // 576px
-    private int fps = 60; // Game FPS
-    private Background background = new Background(-getScreenHeight(), this);
-    private KeyHandler keyH = new KeyHandler();
+    private int fps = 60;
+
+    // GAME STATE
+    private GameState state;
+
+    // GAME SCREEN
+    private MainMenu menuScreen;
+    private OptionMenu optionScreen;
+    private Playing playingScreen;
+
+    // SYSTEM
+    private KeyHandler keyH = new KeyHandler(this);
     private Thread gameThread;
-    private Player player = new Player(this,keyH);
-    private BulletManager bulletManager = new BulletManager(this, player.x, player.y);
+    private AudioOptions audioOptions;
+    private Sound sound;
+
     private int currFPS;
-    private int bulletCounter = 0;
+    private int bulletsCounter = 0;
+    private int enemiesCounter = 0;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(getScreenWidth(), getScreenHeight()));
-        this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
+        this.addMouseListener(keyH);
+        this.addMouseMotionListener(keyH);
         this.setFocusable(true);
 
+        setupGame();
         startGameThread();
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public void setupGame() {
+        state = GameState.MENU;
+
+        audioOptions = new AudioOptions(this);
+        sound = new Sound();
+
+        menuScreen = new MainMenu(this);
+        optionScreen = new OptionMenu(this);
+        playingScreen = new Playing(this, keyH);
+
+        sound.playSong(Sound.MENU);
     }
 
     @Override
@@ -71,9 +97,24 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
-        background.update();
-        bulletManager.update();
+        switch (state) {
+            case MENU: {
+                menuScreen.update();
+                break;
+            }
+            case PLAYING: {
+                playingScreen.update();
+                break;
+            }
+            case SETTING: {
+                optionScreen.update();
+                break;
+            }
+            case QUIT: {
+                System.exit(0);
+                break;
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -81,20 +122,22 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        background.draw(g2d);
-        player.draw(g2d);
-        bulletManager.draw(g2d);
-        addBullets();
+        switch (state) {
+            case MENU: {
+                menuScreen.draw(g2d);
+                break;
+            }
+            case SETTING: {
+                optionScreen.draw(g2d);
+                break;
+            }
+            case PLAYING: {
+                playingScreen.draw(g2d);
+                break;
+            }
+        }
 
         g2d.dispose();
-    }
-
-    public void addBullets() {
-        bulletCounter++;
-        if(bulletCounter > 30) {
-            bulletManager.addBullet(new Bullet(this, player.x, player.y+tileSize/2));
-            bulletCounter = 0;
-        }
     }
 
     public int getXForCenteredText(String text, Graphics g2) {
@@ -128,5 +171,33 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getFps() {
         return fps;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public MainMenu getMenuScreen() {
+        return menuScreen;
+    }
+
+    public Sound getSound() {
+        return sound;
+    }
+
+    public Playing getPlayingScreen() {
+        return playingScreen;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
+
+    public OptionMenu getOptionScreen() {
+        return optionScreen;
     }
 }
