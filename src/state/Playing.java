@@ -28,6 +28,7 @@ public class Playing{
     private int bulletIndex = 1;
     private boolean playerIsHit = false, enemyIsHit = false;
     private boolean gameOver = false;
+    private int gameScore = 0;
 
     public Playing(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -69,11 +70,12 @@ public class Playing{
                         OneEye oneEye = enemyManager.getOneEyes().get(i);
                         playerBullet.update(oneEye.getHitBox().x, oneEye.getHitBox().y, Bullet.ENEMY, j);
                         if(enemyIsHit) {
-                            oneEye.setCurrHealth(oneEye.getCurrHealth()-20);
+                            oneEye.setCurrHealth(oneEye.getCurrHealth()-34);
                             enemyIsHit = false;
                         }
                         if(oneEye.getCurrHealth() <= 0) {
                             enemyManager.removeOneEye(oneEye);
+                            gameScore += 20;
                         }
                         j++;
                     }
@@ -84,11 +86,12 @@ public class Playing{
                         Bat bat = enemyManager.getBats().get(i);
                         playerBullet.update(bat.getHitBox().x, bat.getHitBox().y, Bullet.ENEMY, j);
                         if(enemyIsHit) {
-                            bat.setCurrHealth(bat.getCurrHealth()-10);
+                            bat.setCurrHealth(bat.getCurrHealth()-20);
                             enemyIsHit = false;
                         }
                         if(bat.getCurrHealth() <= 0) {
                             enemyManager.removeBat(bat);
+                            gameScore += 64;
                         }
                         j++;
                     }
@@ -99,18 +102,19 @@ public class Playing{
                         Boss boss = enemyManager.getBosses().get(i);
                         playerBullet.update(boss.getHitBox().x, boss.getHitBox().y, Bullet.ENEMY, 0);
                         if(enemyIsHit) {
-                            boss.setCurrHealth(boss.getCurrHealth()-5);
+                            boss.setCurrHealth(boss.getCurrHealth()-10);
                             enemyIsHit = false;
                         }
                         if(boss.getCurrHealth() <= 0) {
                             enemyManager.removeBoss(boss);
+                            gameScore += 500;
                         }
                     }
                     break;
                 }
             }
             if(playerIsHit) {
-                player.changeHealth(-5);
+                player.changeHealth(-2);
                 playerIsHit = false;
             }
             if(player.getCurrHealth() == 0) {
@@ -147,8 +151,10 @@ public class Playing{
         isPaused = false;
         reset = true;
         enemyType = 0;
+        player.setCurrHealth(100);
         added = false;
         addEnemies(enemyType);
+        gameScore = 0;
     }
 
     public void draw(Graphics2D g2d) {
@@ -158,6 +164,10 @@ public class Playing{
         enemyManager.draw(g2d);
         player.draw(g2d);
         addEnemies(enemyType);
+
+        g2d.setFont(new Font("OCR A Extended", Font.ITALIC, 36));
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Score: " + gameScore, gp.getXForCenteredText("Score: " + gameScore, g2d), 40);
 
         if(gameOver) {
             gameOverScreen.draw(g2d);
@@ -293,4 +303,9 @@ public class Playing{
     public boolean isGameOver() {
         return gameOver;
     }
+
+    public int getGameScore() {
+        return gameScore;
+    }
+
 }

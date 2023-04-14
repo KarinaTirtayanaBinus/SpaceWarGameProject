@@ -121,6 +121,7 @@ public class EnemyManager {
     public void resetAllEnemies() {
         oneEyes.removeAll(oneEyes);
         bats.removeAll(bats);
+        bosses.removeAll(bosses);
     }
 
     public boolean isEnemyClear() {

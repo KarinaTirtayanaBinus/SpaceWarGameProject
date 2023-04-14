@@ -62,6 +62,10 @@ public class GameOver extends State implements StateMethods{
         background.draw(g2d);
         g2d.drawImage(gameOverBg, bgX, bgY, bgW, bgH, null);
 
+        g2d.setFont(new Font("OCR A Extended", Font.ITALIC, 36));
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Score: " + playing.getGameScore(), gp.getXForCenteredText("Score: " + playing.getGameScore(), g2d), gp.getScreenHeight()/2-gp.getTileSize());
+
         menuBtn.draw(g2d);
         restartBtn.draw(g2d);
     }
