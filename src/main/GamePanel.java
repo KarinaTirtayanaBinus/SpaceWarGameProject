@@ -140,8 +140,8 @@ public class GamePanel extends JPanel implements Runnable {
         g2d.dispose();
     }
 
-    public int getXForCenteredText(String text, Graphics g2) {
-        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+    public int getXForCenteredText(String text, Graphics2D g2d) {
+        int length = (int) g2d.getFontMetrics().getStringBounds(text, g2d).getWidth();
         return getScreenWidth() /2 - length/2;
     }
 

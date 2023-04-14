@@ -38,9 +38,6 @@ public class Background {
 
     public void draw(Graphics2D g2d) {
         g2d.drawImage(background[index], x, y, gp.getScreenWidth(), gp.getScreenHeight() *2, null);
-//        g2d.setFont(new Font("OCR A Extended", Font.ITALIC, 36));
-//        g2d.setColor(Color.white);
-//        g2d.drawString("FPS: " + gp.getCurrFPS(), gp.getXForCenteredText("FPS: " + gp.getCurrFPS(), g2d), 50);
     }
 
     public void update() {
